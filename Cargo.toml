@@ -8,6 +8,7 @@ repository = "https://github.com/huanghu578/h3auth"
 readme = "README.md"
 keywords = ["Authentication", "serial", "hardware"]
 categories = ["authentication"]
+documentation = "https://docs.rs/h3auth"
 
 [dependencies]
 regex = "1.10"
