@@ -1,28 +1,75 @@
-//! fltk-kit: reusable utilities for fltk-rs applications.
-//!
-//! Organized in three layers:
-//! - [`core`]: pure logic, no FLTK dependency
-//! - [`widget`]: FLTK widget helpers
-//! - [`async_kit`]: channels and background tasks
+//! h3auth
+//! High-level licensing/authentication facade tying together hardware
+//! fingerprinting, hashing, and ECDSA signing/verification.
 
-pub mod core;
-pub mod widget;
-pub mod async_kit;
+use crate::sign::verify_hash;
+use std::path::Path;
+pub mod hardware;
+pub mod hash;
+pub mod sign;
+pub mod error;
 
-pub use crate::core::rect::Rect;
-pub use crate::core::theme::Theme;
-pub use crate::core::text::Text;
-pub use crate::core::paths::Paths;
+/// Returns the apply code (hex fingerprint) for this machine.
+///
+/// Collects raw hardware identifiers, salts and hashes them via [`hash::get_apply_code_with_salt`].
+/// Returns an empty string when all hardware identifiers are `"[EMPTY]"`,
+/// which indicates a virtual machine or an environment where identifiers
+/// cannot be read; in that case no apply code is produced.
+pub fn get_apply_code(app_salt: &str) -> String {
+    let hw_info = hardware::HardwareRawInfo::collect();
+    let raw = hw_info.to_raw_string();
+    if raw == "[EMPTY]\0[EMPTY]\0[EMPTY]" {
+        return String::new(); // virtual machine hardware; return empty apply code
+    }
+    hash::get_apply_code_with_salt(&raw, app_salt)
+}
 
-pub use crate::widget::fonts::{Fonts, FontSetup, FontSource};
-pub use crate::widget::icon::Icon;
-pub use crate::widget::dialogs::Dialogs;
-pub use crate::widget::auto_page::AutoPage;
-pub use crate::widget::tree::TreeHelper;
-pub use crate::widget::table::TableHelper;
-pub use crate::widget::windows::Windows;
-pub use crate::widget::shortcuts::{Shortcuts, ShortcutManager};
-pub use crate::widget::layout_ext::RectExt;
+/// Generates a license file by signing the given apply code.
+///
+/// Decodes `apply_code` into a 32-byte hash, signs it with `private_key`,
+/// and writes the resulting signature to `path`.
+/// Returns `true` on success, or `false` if decoding, signing, or writing fails.
+pub fn generate_auth_file<P: AsRef<Path>>(path: P,apply_code: &str,private_key:&str) -> bool {
+    if let Ok(hash) = hash::apply_code_to_hash_bytes(apply_code) {
+        if let Ok(signature) = sign::sign_hash(private_key, &hash) {
+            let path_obj = path.as_ref();
+            if let Ok(()) = std::fs::write(path_obj, signature) {
+                return true;
+            }
+        }
+    }
+    false
+}
 
-pub use crate::async_kit::channel::{Channel, Sender, AsyncHandle};
-pub use crate::async_kit::task::{Task, CancelToken};
+/// Verifies a license from a signature string.
+///
+/// Recomputes the salted hardware fingerprint for this machine and checks
+/// it against `signature` using the public key `pk_hex`.
+/// Returns `false` on virtual-machine hardware (all identifiers `"[EMPTY]"`).
+pub fn verify_license(signature: &str,app_salt: &str,pk_hex:&str) -> bool {
+    let hw_info = hardware::HardwareRawInfo::collect();
+    let raw = hw_info.to_raw_string();
+    if raw == "[EMPTY]\0[EMPTY]\0[EMPTY]" {
+        return false; // virtual machine hardware
+    }
+    let hash = hash::compute_fp_hash_with_salt(&raw, app_salt);
+    verify_hash(pk_hex, &hash, signature).is_ok()
+}
+
+/// Verifies a license by reading the signature from a file.
+///
+/// Returns `false` if the file does not exist, cannot be read, or the
+/// contained signature fails verification. See [`verify_license`].
+pub fn verify_license_from_file<P: AsRef<Path>>(path: P,app_salt: &str,pk_hex:&str) -> bool {
+    let path_obj = path.as_ref();
+    let path = Path::new(path_obj);
+    if !path.exists() {
+        return false;
+    }
+    if let Ok(signature) = std::fs::read_to_string(path_obj) {
+        if verify_license(&signature,app_salt,pk_hex) {
+            return true;
+        }
+    }
+    false
+}
