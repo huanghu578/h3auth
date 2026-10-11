@@ -1,0 +1,67 @@
+[package]
+name = "fltk-kit"
+version = "0.1.0"
+edition = "2021"
+description = "Common utilities for fltk-rs applications"
+license = "MIT OR Apache-2.0"
+repository = "https://github.com/huanghu578/fltk-kit"
+readme = "README.md"
+keywords = ["fltk", "gui", "utility"]
+categories = ["gui"]
+
+[dependencies]
+fltk = "1.5.23"
+fltk-table = "0.3.5"
+base64 = "0.23.1"
+image = { version = "0.25.10", default-features = false, features = ["png", "jpeg", "bmp", "gif"] }
+ndarray = "0.17.2"
+
+
+
+[[example]]
+name = "rect_layout"
+path = "examples/rect_layout.rs"
+
+[[example]]
+name = "auto_page"
+path = "examples/auto_page.rs"
+
+[[example]]
+name = "fonts"
+path = "examples/fonts.rs"
+
+[[example]]
+name = "icon"
+path = "examples/icon.rs"
+
+[[example]]
+name = "dialogs"
+path = "examples/dialogs.rs"
+
+[[example]]
+name = "tree_helper"
+path = "examples/tree_helper.rs"
+
+[[example]]
+name = "table_helper"
+path = "examples/table_helper.rs"
+
+[[example]]
+name = "windows"
+path = "examples/windows.rs"
+
+[[example]]
+name = "shortcuts"
+path = "examples/shortcuts.rs"
+
+[[example]]
+name = "channel_demo"
+path = "examples/channel_demo.rs"
+
+[[example]]
+name = "task_demo"
+path = "examples/task_demo.rs"
+
+[[example]]
+name = "task_cancellable"
+path = "examples/task_cancellable.rs"
