@@ -91,18 +91,20 @@ You can also verify against an in-memory signature string with verify_license.
 
 ## API summary
 
-| Function | Purpose |  
-|--- | --- | --- |  
-| get_apply_code(app_salt) | Returns the hex apply code for this machine. Empty on VM/unknown hardware. |  
-| generate_auth_file(path, apply_code, private_key) | Signs an apply code and writes the signature to path. |  
-| verify_license(signature, app_salt, pk_hex) | Verifies an in-memory signature string. |  
-| verify_license_from_file(path, app_salt, pk_hex) | Reads a signature file and verifies it. |  
-| hash::compute_fp_hash_with_salt(hw_raw, salt) | Raw salted SHA-256 fingerprint. |  
-| hash::get_apply_code_with_salt(hw_raw, salt) | Salted fingerprint as a hex apply code. |  
-| hash::apply_code_to_hash_bytes(apply_code_hex) | Decodes a 64-char hex apply code into [u8; 32]. |  
-| sign::generate_key_pair() | Generates a P-256 key pair as (sk_hex, pk_hex). |  
-| sign::sign_hash(sk_hex, hash_bytes) | Signs a 32-byte hash. |  
-| sign::verify_hash(pk_hex, hash_bytes, sig_hex) | Verifies a signature over a 32-byte hash. |  
+
+|  Function  |  Purpose  |    
+|  ---  | ---  | ---  |  
+|   get_apply_code(app_salt)  |  Returns the hex apply code for this machine. Empty on VM/unknown hardware.  |  
+|   generate_auth_file(path, apply_code, private_key)   |   Signs an apply code and writes the signature to path.  |  
+|   verify_license(signature, app_salt, pk_hex)   |   Verifies an in-memory signature string.  |  
+|   verify_license_from_file(path, app_salt, pk_hex)   |   Reads a signature file and verifies it.  |  
+|   hash::compute_fp_hash_with_salt(hw_raw, salt)   |   Raw salted SHA-256 fingerprint. |  
+|   hash::get_apply_code_with_salt(hw_raw, salt)   |   Salted fingerprint as a hex apply code.   |  
+|   hash::apply_code_to_hash_bytes(apply_code_hex)   |   Decodes a 64-char hex apply code into [u8; 32].   |  
+|   sign::generate_key_pair()   |   Generates a P-256 key pair as (sk_hex, pk_hex).   |  
+|   sign::sign_hash(sk_hex, hash_bytes)   |   Signs a 32-byte hash.   |  
+|   sign::verify_hash(pk_hex, hash_bytes, sig_hex) | Verifies a signature over a 32-byte hash.   |  
+
 
 ## Security notes
 app_salt should be a product-specific constant. It is not a secret and does not need to be hidden, but it must match between issuing and verification.
