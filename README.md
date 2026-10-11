@@ -29,15 +29,16 @@ Pure Rust crypto via the p256 and sha2 crates.
 
 ## Project layout
 
-h3auth/
-├── Cargo.toml
-├── src/
-│   ├── lib.rs        # public facade: get_apply_code / generate_auth_file / verify_license*
-│   ├── error.rs      # AuthError and Result alias
-│   ├── hardware.rs   # HardwareRawInfo: raw identifier collection
-│   ├── hash.rs       # SHA-256 salted fingerprint, apply code helpers
-│   └── sign.rs       # P-256 key generation, sign_hash, verify_hash
-└── README.md
+h3auth/  
+├── Cargo.toml  
+├── src/  
+│   ├── lib.rs        # public facade: get_apply_code / generate_auth_file / verify_license*  
+│   ├── error.rs      # AuthError and Result alias  
+│   ├── hardware.rs   # HardwareRawInfo: raw identifier collection  
+│   ├── hash.rs       # SHA-256 salted fingerprint, apply code helpers  
+│   └── sign.rs       # P-256 key generation, sign_hash, verify_hash  
+└── README.md  
+
 ## Installation
 Add the crate to your Cargo.toml:
 
