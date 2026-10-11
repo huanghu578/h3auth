@@ -7,7 +7,7 @@ license = "MIT OR Apache-2.0"
 repository = "https://github.com/huanghu578/h3auth"
 readme = "README.md"
 keywords = ["Authentication", "serial", "hardware"]
-categories = ["Encryption","Decryption"]
+categories = ["authentication"]
 
 [dependencies]
 regex = "1.10"
