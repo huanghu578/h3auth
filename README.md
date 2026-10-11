@@ -1,7 +1,7 @@
 # h3auth
 A lightweight, machine-bound licensing crate for Rust using P-256 (secp256r1 / NIST P-256) ECDSA signatures over a salted hardware fingerprint.
 
-##Overview
+##  Overview
 h3auth binds a license to a specific machine by:
 
 - Collecting raw hardware identifiers (system UUID, baseboard serial, BIOS serial).
