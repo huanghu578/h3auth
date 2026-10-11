@@ -93,7 +93,7 @@ You can also verify against an in-memory signature string with verify_license.
 
 
 |  Function  |  Purpose  |    
-|  ---  | ---  | ---  |  
+|  ---  | ---  |   
 |   get_apply_code(app_salt)  |  Returns the hex apply code for this machine. Empty on VM/unknown hardware.  |  
 |   generate_auth_file(path, apply_code, private_key)   |   Signs an apply code and writes the signature to path.  |  
 |   verify_license(signature, app_salt, pk_hex)   |   Verifies an in-memory signature string.  |  
